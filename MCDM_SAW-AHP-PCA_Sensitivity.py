@@ -11,8 +11,8 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 from scipy.stats import rankdata, spearmanr, kendalltau, qmc
 FILE_PATH = Path(
-    r"C:\Users\Swarna\Desktop\PhD\Analysis\Part 1\Python"
-    r"\Sensitivity1y - old (for discover hazard).xlsx"
+    r""
+    r".xlsx"
 )
 OUTPUT_DIR = FILE_PATH.parent
 SHEET_NAME, TARGET_COL = (0, 'target_col')
