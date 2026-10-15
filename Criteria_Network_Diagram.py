@@ -19,21 +19,12 @@ def wrap_label(text, width=10):
 # 1) Load Excel
 # -----------------------
 # Change these:
-excel_path = r"C:\Users\Swarna\Desktop\PhD\Analysis\Part 1\Python\NetDia&HierClus\Criteria_Network_Diagram1.xlsx"        # <-- put your file path
-sheet_name = 0                        # or "Sheet1"
+excel_path = r".xlsx"       
+sheet_name = 0                        
 
 df = pd.read_excel(excel_path, sheet_name=sheet_name)
-
-# Assume first column is parcel ID, rest are criteria
 criteria_df = df.iloc[:, 1:].copy()
-
-# Ensure all criteria are numeric (coerce non-numeric to NaN)
 criteria_df = criteria_df.apply(pd.to_numeric, errors="coerce")
-
-# Optional: drop rows with too many missing values
-# criteria_df = criteria_df.dropna(thresh=int(criteria_df.shape[1]*0.8))
-
-# Optional: fill remaining NaNs with column medians
 criteria_df = criteria_df.apply(lambda s: s.fillna(s.median()), axis=0)
 criterion_type = {
     "Population Density": "benefit",
@@ -80,15 +71,14 @@ print(cv_table)
 # -----------------------
 # 2) Correlation matrix
 # -----------------------
-# Use Spearman for rank/ordinal type indicators, Pearson for continuous
 method = "spearman"   # "pearson" or "spearman"
 corr = criteria_df.corr(method=method)
 
 # -----------------------
 # 3) Correlation Network
 # -----------------------
-# Keep edges only above this threshold
-thr = 0.3  # adjust: 0.5–0.8 common
+
+thr = 0.3  
 
 # Build graph
 G = nx.Graph()
@@ -189,14 +179,10 @@ plt.show()
 # -----------------------
 # 5) Boxplot of criteria (Descriptive visualization)
 # -----------------------
-# Output folder (use the same one you used for network/dendrogram)
-out_dir = r"C:\Users\Swarna\Desktop\PhD\Analysis\Part 1\Python\outputs"
+out_dir = r""
 os.makedirs(out_dir, exist_ok=True)
 
 boxplot_path = os.path.join(out_dir, f"criteria_boxplot_{method}_600dpi.jpg")
-
-# Optional: If criteria are on very different scales, a boxplot can be dominated by large-scale variables.
-# Uncomment ONE of the following if needed:
 
 # (A) Standardize (z-score) for comparability
 crit_plot = (criteria_df - criteria_df.mean()) / criteria_df.std(ddof=0)
@@ -220,89 +206,31 @@ for col in crit_plot.columns:
         raise ValueError("Criterion type must be 'benefit' or 'cost'")
 
 
-#crit_plot = (criteria_df - criteria_df.min()) / (criteria_df.max() - criteria_df.min())
-
-# (C) Raw values (default)
-#crit_plot = criteria_df.copy()
-
 # -----------------------
 # (D)Linear ratio normalization (benefit / cost)
 # -----------------------
-# eps = 1e-9  # small value to avoid division by zero
-
-# crit_plot = criteria_df.copy()
-
-# for col in crit_plot.columns:
-#     ctype = criterion_type.get(col)
-
-#     if ctype is None:
-#         raise ValueError(f"Criterion type not defined for: {col}")
-
-#     if ctype.lower() == "benefit":
-#         crit_plot[col] = crit_plot[col] / (crit_plot[col].max() + eps)
-
-#     elif ctype.lower() == "cost":
-#         crit_plot[col] = (crit_plot[col].min() + eps) / (crit_plot[col] + eps)
-
-#     else:
-#         raise ValueError("Criterion type must be 'benefit' or 'cost'")
-
-
-
 fig, ax = plt.subplots(figsize=(12, 6))
 
 bp = ax.boxplot(
     [crit_plot[col].values for col in crit_plot.columns],
     labels=crit_plot.columns,
-    patch_artist=True,     # REQUIRED to fill boxes
-    showfliers=True,       # show outliers
+    patch_artist=True,     
+    showfliers=True,      
     widths=0.6
 )
 
-# -----------------------
-# Customize box appearance
-# -----------------------
 for box in bp["boxes"]:
-    box.set(
-        facecolor="none",   # box fill color
-        edgecolor="blue",     # box outline color
-        linewidth=1.5,
-        linestyle="-"          # "-", "--", "-.", ":"
-    )
+    box.set(facecolor="none",   edgecolor="blue",     linewidth=1.5,linestyle="-")
 
-# -----------------------
-# Customize median lines
-# -----------------------
 for median in bp["medians"]:
-    median.set(
-        color="black",
-        linewidth=2.0,
-        linestyle="-"
-    )
+    median.set(color="black",linewidth=2.0,linestyle="-")
 
-# -----------------------
-# Customize whiskers
-# -----------------------
 for whisker in bp["whiskers"]:
-    whisker.set(
-        color="black",
-        linewidth=1.2,
-        linestyle="--"         # dashed whiskers
-    )
+    whisker.set(color="black",linewidth=1.2,linestyle="--"        )
 
-# -----------------------
-# Customize caps
-# -----------------------
 for cap in bp["caps"]:
-    cap.set(
-        color="black",
-        linewidth=1.2,
-        linestyle="-"
-    )
+    cap.set(color="black",linewidth=1.2,linestyle="-")
 
-# -----------------------
-# Customize outliers (fliers)
-# -----------------------
 for flier in bp["fliers"]:
     flier.set(
         marker="o",            # "o", "s", "^", "D", "+"
@@ -312,9 +240,6 @@ for flier in bp["fliers"]:
         alpha=0.6
     )
 
-# -----------------------
-# Axis formatting
-# -----------------------
 ax.set_title("Distribution of Vulnerability Criteria", fontsize=14)
 ax.set_ylabel("Normalized Value", fontsize=14)
 ax.set_xlabel("Criteria", fontsize=10)
