@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 from scipy.stats import rankdata
 
-file_path = r"C:\Users\Swarna\Desktop\PhD\Analysis\Part 1\Python\Sensitivity1y - old (for discover hazard).xlsx"
-output_file = r"C:\Users\Swarna\Desktop\PhD\Analysis\Part 1\Python\SAW_Scores_Ranks.xlsx"
+file_path = r".xlsx"
+output_file = r".xlsx"
 
 df = pd.read_excel(file_path)
 unit_col = df.columns[0]
