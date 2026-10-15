@@ -10,7 +10,7 @@ from matplotlib.ticker import PercentFormatter
 # SETTINGS
 # ============================================================
 
-BASE_DIR = Path("C:\\Users\\Swarna\\Desktop\\PhD\\Analysis\\Part 1\\Python\\AHP_uncertainty\\AHP_participant matrices.xlsx").resolve().parent
+BASE_DIR = Path(".xlsx").resolve().parent
 EXCEL_PATH = BASE_DIR / "AHP_participant matrices.xlsx"
 N_EXPERTS, N_BOOTSTRAP, RANDOM_SEED = 17, 10000, 42
 
@@ -385,7 +385,6 @@ for analysis_name, settings in ANALYSES.items():
 
 # ============================================================
 # 8. PLOT: COMBINED VULNERABILITY + SUSCEPTIBILITY
-# EXACT ORIGINAL PLOT STYLE
 # ============================================================
 
 def draw_weight_panel(
@@ -536,7 +535,7 @@ def draw_weight_panel(
     ].values
 
     # =========================================================
-    # 5. EQ. 9 WEIGHT / CONSISTENCY ERROR
+    # 5. WEIGHT / CONSISTENCY ERROR
     # =========================================================
 
     weight_error = loo_summary[
@@ -626,7 +625,6 @@ def draw_weight_panel(
 
 # ============================================================
 # 9. CREATE COMBINED TWO-PANEL FIGURE
-# EXACT ORIGINAL FORMAT
 # ============================================================
 
 def plot_combined_weight_stability(
